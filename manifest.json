@@ -1,0 +1,24 @@
+{
+  "name": "टेस्ट प्रदर्शन ट्रैकर",
+  "short_name": "TestTracker",
+  "description": "BPSC, UPSC, UPPSC और UGC NET टेस्ट परफॉर्मेंस व मिस्टेक ट्रैकर",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#fff7ed",
+  "theme_color": "#f97316",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3407/3407024.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "https://cdn-icons-png.flaticon.com/512/3407/3407024.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
