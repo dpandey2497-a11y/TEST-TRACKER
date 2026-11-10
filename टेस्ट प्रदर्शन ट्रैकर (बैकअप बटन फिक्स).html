@@ -1,0 +1,1301 @@
+<!DOCTYPE html>
+<html lang="hi" class="h-full w-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>टेस्ट प्रदर्शन ट्रैकर (BPSC, UPSC, UPPSC, UGC NET)</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- PWA Settings -->
+    <meta name="theme-color" content="#4c1d95">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Nirmala UI", "Noto Sans Devanagari", sans-serif;
+            -webkit-tap-highlight-color: transparent;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #fff7ed;
+        }
+        .no-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+        .no-scrollbar {
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+        }
+        /* Active Tab with strong, dark, high-contrast sign */
+        .tab-btn.active {
+            background: linear-gradient(135deg, #1e1b4b, #311042) !important;
+            color: #ffffff !important;
+            border: 2px solid #f97316 !important;
+            box-shadow: 0 6px 18px rgba(15, 23, 42, 0.45) !important;
+            transform: scale(1.03);
+        }
+        .tab-btn.active .tab-indicator {
+            box-shadow: 0 0 10px #fbbf24;
+            transform: scale(1.2);
+        }
+    </style>
+</head>
+<body class="w-full min-h-screen text-slate-800 flex flex-col bg-gradient-to-b from-orange-50/50 via-rose-50/30 to-amber-50/40">
+
+    <!-- Top Sticky Header (Ultra-Light Warm Peach / Golden Morning Sunset Glow) -->
+    <header class="w-full bg-gradient-to-r from-amber-100 via-orange-50 to-rose-100 text-slate-900 shadow-sm sticky top-0 z-30 border-b border-orange-200">
+        <div class="w-full px-4 sm:px-8 py-3.5 flex items-center justify-between">
+            <div class="flex items-center space-x-3.5">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-orange-400 to-rose-500 text-white flex items-center justify-center text-2xl shadow-md">
+                    <i class="fa-solid fa-chart-line"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl sm:text-2xl font-black tracking-wide leading-tight text-slate-950">टेस्ट प्रदर्शन ट्रैकर</h1>
+                    <p class="text-xs sm:text-sm text-orange-900 font-extrabold">BPSC • UPSC • UPPSC • UGC NET</p>
+                </div>
+            </div>
+
+            <div class="flex items-center gap-2.5">
+                <!-- Fullscreen Toggle Button with Enhanced Touch/Click Support -->
+                <button type="button" onclick="handleFullscreenClick(event)" id="headerFsBtn" title="फुलस्क्रीन मोड" class="w-12 h-12 rounded-2xl bg-white hover:bg-orange-50 active:scale-90 transition-all flex items-center justify-center text-xl text-slate-800 border-2 border-orange-300 shadow-sm cursor-pointer relative z-50">
+                    <i id="fullscreenIcon" class="fa-solid fa-expand text-orange-600"></i>
+                </button>
+                <!-- Add New Test Button -->
+                <button onclick="openModal()" class="bg-gradient-to-r from-orange-500 to-rose-500 hover:from-orange-600 hover:to-rose-600 text-white font-black px-4 py-2.5 rounded-xl text-sm sm:text-base shadow-md shadow-orange-500/25 flex items-center gap-2 active:scale-95 transition">
+                    <i class="fa-solid fa-plus text-base"></i> <span>नया टेस्ट</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Horizontal Scrollable Exam Filter Tabs (High Contrast Indicator) -->
+        <div class="w-full bg-white/80 backdrop-blur-sm border-t border-orange-200/70 px-4 sm:px-8 py-2.5">
+            <div class="w-full flex items-center gap-2.5 overflow-x-auto no-scrollbar py-1">
+                <button onclick="switchTab('ALL')" id="tab-ALL" class="tab-btn active px-5 py-2.5 rounded-xl text-sm sm:text-base font-black transition-all flex items-center gap-2 bg-white border-2 border-orange-200 text-slate-700 whitespace-nowrap shadow-xs">
+                    <i class="fa-solid fa-layer-group text-sm tab-indicator text-amber-400"></i> <span>सभी</span>
+                </button>
+                <button onclick="switchTab('BPSC')" id="tab-BPSC" class="tab-btn px-5 py-2.5 rounded-xl text-sm sm:text-base font-black transition-all flex items-center gap-2 bg-white hover:bg-orange-50 border-2 border-orange-200 text-slate-700 whitespace-nowrap">
+                    <span class="tab-indicator w-3 h-3 rounded-full bg-emerald-500 transition-transform"></span> <span>BPSC</span>
+                </button>
+                <button onclick="switchTab('UPSC')" id="tab-UPSC" class="tab-btn px-5 py-2.5 rounded-xl text-sm sm:text-base font-black transition-all flex items-center gap-2 bg-white hover:bg-orange-50 border-2 border-orange-200 text-slate-700 whitespace-nowrap">
+                    <span class="tab-indicator w-3 h-3 rounded-full bg-sky-500 transition-transform"></span> <span>UPSC CSE</span>
+                </button>
+                <button onclick="switchTab('UPPSC')" id="tab-UPPSC" class="tab-btn px-5 py-2.5 rounded-xl text-sm sm:text-base font-black transition-all flex items-center gap-2 bg-white hover:bg-orange-50 border-2 border-orange-200 text-slate-700 whitespace-nowrap">
+                    <span class="tab-indicator w-3 h-3 rounded-full bg-amber-500 transition-transform"></span> <span>UPPSC</span>
+                </button>
+                <button onclick="switchTab('UGCNET')" id="tab-UGCNET" class="tab-btn px-5 py-2.5 rounded-xl text-sm sm:text-base font-black transition-all flex items-center gap-2 bg-white hover:bg-orange-50 border-2 border-orange-200 text-slate-700 whitespace-nowrap">
+                    <span class="tab-indicator w-3 h-3 rounded-full bg-purple-500 transition-transform"></span> <span>UGC NET</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content Area (Full Display Width + Extra Large Typography) -->
+    <main class="w-full flex-1 px-4 sm:px-8 py-5 space-y-5 pb-32">
+
+        <!-- Top Overview Metric Cards (Sunset Warm Glow) -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-6 w-full">
+            <div class="bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-sm border border-orange-200/70 text-center flex flex-col justify-center">
+                <span class="text-xs sm:text-base text-slate-600 font-extrabold" id="labelTotalTests">कुल टेस्ट</span>
+                <span id="statTotalTests" class="text-3xl sm:text-5xl font-black text-purple-950 mt-1">0</span>
+            </div>
+            <div class="bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-sm border border-orange-200/70 text-center flex flex-col justify-center">
+                <span class="text-xs sm:text-base text-slate-600 font-extrabold">औसत नेट स्कोर</span>
+                <span id="statAvgScore" class="text-3xl sm:text-5xl font-black text-orange-600 mt-1">0.0</span>
+            </div>
+            <div class="bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-sm border border-orange-200/70 text-center flex flex-col justify-center">
+                <span class="text-xs sm:text-base text-slate-600 font-extrabold">सर्वोच्च स्कोर</span>
+                <span id="statBestScore" class="text-3xl sm:text-5xl font-black text-rose-600 mt-1">0.0</span>
+            </div>
+        </div>
+
+        <!-- Trend Chart Section -->
+        <div class="bg-white/90 backdrop-blur-sm p-4 sm:p-6 rounded-2xl shadow-sm border border-orange-200/70 w-full">
+            <div class="flex items-center justify-between mb-3">
+                <h2 class="text-base sm:text-xl font-black text-slate-900 flex items-center gap-2">
+                    <i class="fa-solid fa-arrow-trend-up text-orange-500"></i> <span id="chartHeading">स्कोर ट्रेंड (Progression Graph)</span>
+                </h2>
+                <span id="chartSubBadge" class="text-xs sm:text-sm bg-orange-100 text-orange-900 px-3 py-1 rounded-full font-black border border-orange-300">
+                    सभी परीक्षाएं
+                </span>
+            </div>
+            <div class="h-56 sm:h-72 w-full relative">
+                <canvas id="scoreChart"></canvas>
+            </div>
+        </div>
+
+        <!-- History Header & Actions -->
+        <div class="flex items-center justify-between px-1 pt-2">
+            <h2 class="text-base sm:text-xl font-black text-purple-950 flex items-center gap-2">
+                <i class="fa-solid fa-list-check text-rose-600"></i> <span id="logsHeading">टेस्ट इतिहास व Mistake Log</span>
+            </h2>
+            <div class="flex items-center gap-2">
+                <!-- Backup & Restore Center Trigger -->
+                <button type="button" onclick="openBackupModal(event)" class="cursor-pointer text-xs sm:text-sm text-purple-900 hover:text-purple-950 font-black bg-purple-100 hover:bg-purple-200 px-3.5 py-2 rounded-xl border border-purple-300 transition flex items-center gap-1.5 shadow-xs active:scale-95">
+                    <i class="fa-solid fa-cloud-arrow-up text-purple-700 pointer-events-none"></i> <span class="pointer-events-none">डेटा बैकअप / रिस्टोर</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dynamic Test Log Cards Container -->
+        <div id="testLogsContainer" class="space-y-4 w-full">
+            <!-- Dynamic Test Cards injected by JavaScript -->
+        </div>
+
+    </main>
+
+    <!-- Modal: Backup & Restore Manager -->
+    <div id="backupModal" class="fixed inset-0 bg-purple-950/70 backdrop-blur-sm z-[100] flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+        <div class="bg-white w-full max-w-xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl max-h-[92vh] overflow-y-auto space-y-5 border border-orange-200 relative z-[101]">
+            
+            <div class="flex items-center justify-between border-b border-orange-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center text-lg font-black">
+                        <i class="fa-solid fa-shield-halved"></i>
+                    </div>
+                    <div>
+                        <h3 class="text-base sm:text-xl font-black text-purple-950">डेटा बैकअप व रिस्टोर केंद्र</h3>
+                        <p class="text-xs font-bold text-slate-500">भविष्य के नए फीचर्स या फोन बदलने पर भी डेटा सुरक्षित</p>
+                    </div>
+                </div>
+                <button type="button" onclick="closeBackupModal(event)" class="cursor-pointer text-slate-400 hover:text-slate-700 text-3xl leading-none px-2 font-bold active:scale-90">&times;</button>
+            </div>
+
+            <!-- Backup Notification Banner -->
+            <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-300 p-3.5 rounded-2xl flex items-start gap-2.5 text-xs sm:text-sm text-amber-950 font-bold leading-relaxed">
+                <i class="fa-solid fa-circle-info text-amber-600 text-base mt-0.5 shrink-0"></i>
+                <span>भविष्य में नए अपडेट्स आने या डिवाइस बदलने पर अपने पुराने टेस्ट रिकॉर्ड्स कभी नहीं खोएंगे। आप नियमित रूप से JSON फ़ाइल डाउनलोड कर Google Drive या WhatsApp पर सेव रख सकते हैं।</span>
+            </div>
+
+            <!-- Action 1: Export / Download -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                <div class="flex items-center justify-between">
+                    <span class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-wide">
+                        <i class="fa-solid fa-file-arrow-down text-emerald-600 mr-1.5"></i> 1. बैकअप सुरक्षित करें (Export)
+                    </span>
+                    <span id="backupRecordCount" class="text-xs bg-emerald-100 text-emerald-900 font-extrabold px-2 py-0.5 rounded-full">0 रिकॉर्ड्स</span>
+                </div>
+                <p class="text-xs text-slate-600 font-semibold">फोन में फ़ाइल डाउनलोड करें, WhatsApp / Google Drive पर शेयर करें या कॉपी करें:</p>
+                
+                <div class="space-y-2">
+                    <div class="grid grid-cols-2 gap-2">
+                        <!-- Direct File Download with Blob/Data Fallback -->
+                        <button type="button" onclick="exportData()" class="cursor-pointer py-2.5 bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 hover:to-teal-600 text-white font-black rounded-xl text-xs sm:text-sm shadow-md active:scale-98 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-download"></i> फ़ाइल डाउनलोड
+                        </button>
+                        <!-- Native Mobile Web Share (WhatsApp / Drive / Files) -->
+                        <button type="button" onclick="shareBackupNative()" class="cursor-pointer py-2.5 bg-gradient-to-r from-orange-500 to-rose-600 hover:from-orange-600 hover:to-rose-700 text-white font-black rounded-xl text-xs sm:text-sm shadow-md active:scale-98 transition flex items-center justify-center gap-1.5">
+                            <i class="fa-solid fa-share-nodes"></i> शेयर (WhatsApp/Drive)
+                        </button>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-2">
+                        <!-- 1-Click Clipboard Copy -->
+                        <button type="button" onclick="copyDataToClipboard()" class="cursor-pointer py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95">
+                            <i class="fa-regular fa-copy text-purple-700"></i> टेक्स्ट कॉपी करें
+                        </button>
+                        <!-- Toggle Manual Textarea -->
+                        <button type="button" onclick="toggleBackupTextarea()" class="cursor-pointer py-2 bg-white border border-slate-300 hover:bg-slate-100 text-slate-800 font-bold rounded-xl text-xs transition flex items-center justify-center gap-1.5 shadow-xs active:scale-95">
+                            <i class="fa-solid fa-code text-blue-700"></i> बैकअप कोड देखें
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Collapsible Backup Text Box -->
+                <div id="backupTextContainer" class="hidden pt-2 space-y-1.5">
+                    <label class="text-[11px] font-bold text-slate-600 flex justify-between">
+                        <span>बैकअप JSON कोड (Select All & Copy):</span>
+                        <span class="text-emerald-700 font-black cursor-pointer" onclick="copyDataToClipboard()">कॉपी करें</span>
+                    </label>
+                    <textarea id="rawBackupText" readonly rows="4" class="w-full p-2.5 text-[11px] font-mono bg-white border-2 border-orange-200 rounded-xl outline-none select-all text-slate-800"></textarea>
+                </div>
+            </div>
+
+            <!-- Action 2: Import / Restore -->
+            <div class="bg-slate-50 border border-slate-200 rounded-2xl p-4 space-y-3">
+                <span class="text-xs sm:text-sm font-black text-slate-900 uppercase tracking-wide block">
+                    <i class="fa-solid fa-file-arrow-up text-blue-600 mr-1.5"></i> 2. पिछला बैकअप रिस्टोर करें (Restore / Import)
+                </span>
+                
+                <!-- Tab toggle for File vs Text Paste -->
+                <div class="flex border border-slate-200 rounded-xl p-1 bg-white">
+                    <button type="button" onclick="switchRestoreMode('file')" id="restoreTabFile" class="flex-1 py-1 text-xs font-black rounded-lg bg-blue-100 text-blue-900 transition cursor-pointer">
+                        <i class="fa-solid fa-file-arrow-up mr-1"></i> फ़ाइल से
+                    </button>
+                    <button type="button" onclick="switchRestoreMode('paste')" id="restoreTabPaste" class="flex-1 py-1 text-xs font-black rounded-lg text-slate-600 transition cursor-pointer">
+                        <i class="fa-solid fa-paste mr-1"></i> टेक्स्ट पेस्ट करके
+                    </button>
+                </div>
+
+                <!-- Mode 1: File Input -->
+                <div id="restoreFileSection" class="space-y-1.5">
+                    <p class="text-[11px] text-slate-600 font-semibold">डाउनलोड की गई .json बैकअप फ़ाइल चुनें:</p>
+                    <input type="file" id="importFileInput" accept=".json,application/json,text/plain" class="block w-full text-xs text-slate-600 file:mr-3 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-black file:bg-blue-100 file:text-blue-900 hover:file:bg-blue-200 cursor-pointer border border-dashed border-slate-300 rounded-xl p-2 bg-white">
+                </div>
+
+                <!-- Mode 2: Paste Area -->
+                <div id="restorePasteSection" class="hidden space-y-1.5">
+                    <p class="text-[11px] text-slate-600 font-semibold">कॉपी किया हुआ बैकअप टेक्स्ट यहाँ पेस्ट करें:</p>
+                    <textarea id="importPasteInput" rows="3" placeholder='यहाँ बैकअप कोड पेस्ट करें (जैसे {"schemaVersion": 2, ...})' class="w-full p-2.5 text-xs font-mono border-2 border-slate-300 rounded-xl focus:border-blue-500 outline-none bg-white"></textarea>
+                </div>
+
+                <div class="grid grid-cols-2 gap-2.5 pt-1">
+                    <button type="button" onclick="processImport(false)" class="cursor-pointer py-2.5 bg-blue-900 hover:bg-blue-800 text-white font-black rounded-xl text-xs sm:text-sm shadow-md active:scale-98 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-code-merge"></i> जोड़ें (Merge Records)
+                    </button>
+                    <button type="button" onclick="processImport(true)" class="cursor-pointer py-2.5 bg-rose-700 hover:bg-rose-800 text-white font-black rounded-xl text-xs sm:text-sm shadow-md active:scale-98 transition flex items-center justify-center gap-1.5">
+                        <i class="fa-solid fa-arrows-rotate"></i> नया रिप्लेस (Overwrite)
+                    </button>
+                </div>
+                <div class="text-[11px] text-slate-500 font-semibold space-y-0.5">
+                    <div>• <b>Merge:</b> पुराने रिकॉर्ड्स रहेंगे और नया डेटा उनमें जुड़ जाएगा।</div>
+                    <div>• <b>Overwrite:</b> मौजूदा रिकॉर्ड्स हटकर बैकअप डेटा सेट हो जाएगा।</div>
+                </div>
+            </div>
+
+            <div id="backupFeedbackMsg" class="hidden p-3 rounded-xl text-xs sm:text-sm font-bold"></div>
+
+        </div>
+    </div>
+
+    <!-- Bottom Navigation Bar (Sunset Warm Tint) -->
+    <nav class="fixed bottom-0 inset-x-0 bg-white/95 backdrop-blur-md border-t border-orange-200/80 py-3 px-6 z-40 shadow-lg">
+        <div class="w-full max-w-lg mx-auto flex items-center justify-around text-center">
+            <button type="button" onclick="switchTab('ALL')" class="cursor-pointer text-purple-950 hover:text-orange-600 flex flex-col items-center">
+                <i class="fa-solid fa-house text-xl sm:text-2xl text-orange-600 pointer-events-none"></i>
+                <span class="text-xs sm:text-sm font-black mt-1 pointer-events-none">होम</span>
+            </button>
+            <button type="button" onclick="openModal()" class="cursor-pointer text-slate-800 hover:text-orange-600 flex flex-col items-center -mt-4">
+                <div class="w-14 h-14 rounded-full bg-gradient-to-tr from-amber-400 via-orange-500 to-rose-500 text-white flex items-center justify-center shadow-xl shadow-orange-500/30 border-4 border-white active:scale-95 transition pointer-events-none">
+                    <i class="fa-solid fa-plus text-2xl font-black"></i>
+                </div>
+                <span class="text-xs sm:text-sm font-black mt-1 pointer-events-none">नया टेस्ट</span>
+            </button>
+            <button type="button" onclick="openBackupModal(event)" class="cursor-pointer text-slate-600 hover:text-purple-900 flex flex-col items-center active:scale-90 transition">
+                <i class="fa-solid fa-shield-halved text-xl sm:text-2xl text-purple-700 pointer-events-none"></i>
+                <span class="text-xs sm:text-sm font-black mt-1 text-purple-950 pointer-events-none">बैकअप</span>
+            </button>
+            <button type="button" onclick="handleFullscreenClick(event)" class="cursor-pointer text-slate-600 hover:text-orange-600 flex flex-col items-center">
+                <i id="bottomFsIcon" class="fa-solid fa-expand text-xl sm:text-2xl text-orange-600 pointer-events-none"></i>
+                <span class="text-xs sm:text-sm font-black mt-1 pointer-events-none">फुलस्क्रीन</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Floating Toast Notification for Feedback -->
+    <div id="toastNotification" class="fixed top-20 left-1/2 -translate-x-1/2 bg-slate-900/95 text-white text-xs sm:text-sm font-black px-4 py-2.5 rounded-full shadow-2xl border border-orange-400/50 z-50 pointer-events-none transition-all duration-300 opacity-0 -translate-y-2">
+        <span id="toastText">अलर्ट</span>
+    </div>
+
+    <!-- Modal: Add New Test Entry -->
+    <div id="testModal" class="fixed inset-0 bg-purple-950/70 backdrop-blur-xs z-50 flex items-end sm:items-center justify-center p-0 sm:p-4 hidden">
+        <div class="bg-white w-full max-w-xl rounded-t-3xl sm:rounded-3xl p-5 sm:p-7 shadow-2xl max-h-[92vh] overflow-y-auto space-y-4 border border-orange-200">
+            
+            <div class="flex items-center justify-between border-b border-orange-100 pb-3">
+                <div class="flex items-center gap-2.5">
+                    <div class="w-10 h-10 rounded-xl bg-orange-100 text-orange-700 flex items-center justify-center text-lg font-black">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <h3 class="text-base sm:text-xl font-black text-purple-950">नया टेस्ट स्कोर दर्ज करें</h3>
+                </div>
+                <button onclick="closeModal()" class="text-slate-400 hover:text-slate-700 text-3xl leading-none px-2 font-bold">&times;</button>
+            </div>
+
+            <form id="testForm" onsubmit="saveTest(event)" class="space-y-4">
+                <!-- Exam Category Selection -->
+                <div>
+                    <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">परीक्षा श्रेणी (Exam Category)</label>
+                    <div class="grid grid-cols-4 gap-2 mt-1.5">
+                        <button type="button" onclick="setFormCategory('BPSC')" id="btnFormBPSC" class="py-2.5 text-xs sm:text-sm font-black rounded-xl border border-slate-200 transition text-slate-700 bg-slate-50 flex items-center justify-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span> BPSC
+                        </button>
+                        <button type="button" onclick="setFormCategory('UPSC')" id="btnFormUPSC" class="py-2.5 text-xs sm:text-sm font-black rounded-xl border border-slate-200 transition text-slate-700 bg-slate-50 flex items-center justify-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span> UPSC
+                        </button>
+                        <button type="button" onclick="setFormCategory('UPPSC')" id="btnFormUPPSC" class="py-2.5 text-xs sm:text-sm font-black rounded-xl border border-slate-200 transition text-slate-700 bg-slate-50 flex items-center justify-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-orange-500"></span> UPPSC
+                        </button>
+                        <button type="button" onclick="setFormCategory('UGCNET')" id="btnFormUGCNET" class="py-2.5 text-xs sm:text-sm font-black rounded-xl border border-slate-200 transition text-slate-700 bg-slate-50 flex items-center justify-center gap-1.5">
+                            <span class="w-2.5 h-2.5 rounded-full bg-purple-500"></span> NET
+                        </button>
+                    </div>
+                    <input type="hidden" id="formExamCategory" value="BPSC">
+                </div>
+
+                <!-- Test Name & Date -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">टेस्ट का नाम / कोड</label>
+                        <input type="text" id="testName" required placeholder="उदा. BPSC FLT-01" class="w-full mt-1.5 px-3.5 py-2.5 text-sm sm:text-base border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none bg-orange-50/30 font-bold text-slate-800">
+                    </div>
+                    <div>
+                        <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">तारीख</label>
+                        <input type="date" id="testDate" required class="w-full mt-1.5 px-3.5 py-2.5 text-sm sm:text-base border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none bg-orange-50/30 font-bold text-slate-800">
+                    </div>
+                </div>
+
+                <!-- Total & Attempted -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">कुल प्रश्न (Total)</label>
+                        <input type="number" id="totalQuestions" value="150" min="10" max="300" required oninput="onTotalQuestionsInput()" class="w-full mt-1.5 px-3.5 py-2.5 text-base sm:text-lg border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none font-black text-slate-900">
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">कुल अटेम्प्ट</label>
+                            <span id="maxAttemptHint" class="text-[10px] text-slate-500 font-bold">अधिकतम: 150</span>
+                        </div>
+                        <input type="number" id="attempted" oninput="onAttemptedInput()" min="0" required placeholder="उदा. 120" class="w-full mt-1.5 px-3.5 py-2.5 text-base sm:text-lg border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none font-black text-slate-900">
+                    </div>
+                </div>
+
+                <!-- Calculation Mode Selector / Helper Note -->
+                <div class="bg-gradient-to-r from-amber-50 to-orange-50 border border-orange-300 p-2.5 rounded-xl flex items-center justify-between text-xs text-orange-950 font-bold shadow-xs">
+                    <span class="flex items-center gap-1.5">
+                        <i class="fa-solid fa-bolt-lightning text-orange-600 text-sm"></i>
+                        <span><strong>स्मार्ट ऑटो-सिंक:</strong> सिर्फ गलत या सही में से कोई एक भरें, दूसरा अपने-आप सही निकल आएगा!</span>
+                    </span>
+                </div>
+
+                <!-- Correct & Wrong Inputs with Instant Reactive Auto-Sync -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs sm:text-sm font-black text-emerald-800 uppercase tracking-wider">सही उत्तर (Correct ✔)</label>
+                            <span id="correctFieldTag" class="text-[10px] bg-emerald-100 text-emerald-900 font-extrabold px-1.5 py-0.5 rounded">ऑटो</span>
+                        </div>
+                        <input type="number" id="correctAnswers" oninput="onCorrectInput()" min="0" required placeholder="उदा. 95" class="w-full mt-1.5 px-3.5 py-2.5 text-lg sm:text-xl border-2 border-emerald-500 bg-emerald-50 rounded-xl focus:ring-2 focus:ring-emerald-500 outline-none font-black text-emerald-950">
+                    </div>
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs sm:text-sm font-black text-rose-800 uppercase tracking-wider">गलत उत्तर (Wrong ✖)</label>
+                            <span id="wrongFieldTag" class="text-[10px] bg-rose-100 text-rose-900 font-extrabold px-1.5 py-0.5 rounded">भरें</span>
+                        </div>
+                        <input type="number" id="wrongAnswers" oninput="onWrongInput()" min="0" required placeholder="उदा. 25" class="w-full mt-1.5 px-3.5 py-2.5 text-lg sm:text-xl border-2 border-rose-500 bg-rose-50 rounded-xl focus:ring-2 focus:ring-rose-500 outline-none font-black text-rose-950">
+                    </div>
+                </div>
+
+                <!-- Validation Error Warning Banner -->
+                <div id="mathValidationAlert" class="hidden bg-rose-100 border-2 border-rose-500 text-rose-950 px-3.5 py-2.5 rounded-xl text-xs sm:text-sm font-black flex items-center gap-2">
+                    <i class="fa-solid fa-triangle-exclamation text-rose-600 text-lg flex-shrink-0"></i>
+                    <span id="mathValidationMessage">अमान्य गणना!</span>
+                </div>
+
+                <!-- Silly Mistakes & Penalty Rate -->
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <div class="flex items-center justify-between">
+                            <label class="text-xs sm:text-sm font-black text-amber-900 uppercase tracking-wider">सिली मिस्टेक्स (Cat A)</label>
+                            <span id="catAMaxHint" class="text-[10px] text-amber-800 font-bold">गलत से कम</span>
+                        </div>
+                        <input type="number" id="catAMistakes" oninput="onCatAInput()" min="0" placeholder="उदा. 4" class="w-full mt-1.5 px-3.5 py-2.5 text-base sm:text-lg border-2 border-amber-400 bg-amber-50 rounded-xl focus:ring-2 focus:ring-amber-500 outline-none font-black text-amber-950">
+                    </div>
+                    <div>
+                        <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">नेगेटिव दर</label>
+                        <select id="penaltyRate" onchange="calculateRealtimeScore()" class="w-full mt-1.5 px-3 py-2.5 text-sm sm:text-base border-2 border-orange-200 rounded-xl outline-none bg-orange-50/40 font-black text-slate-800">
+                            <option value="0.333333">1/3 (0.33 BPSC/UPSC/UPPSC)</option>
+                            <option value="0.25">1/4 (0.25)</option>
+                            <option value="0">कोई नेगेटिव नहीं (0 - NET)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Live Auto-Calculated Score Preview (Sunset Sky Gradient) -->
+                <div class="bg-gradient-to-r from-purple-950 via-rose-900 to-orange-950 p-4 rounded-2xl text-white flex items-center justify-between shadow-lg border border-amber-400/30">
+                    <div>
+                        <div class="text-xs text-amber-300 font-extrabold uppercase tracking-wider">ऑटो-कैलकुलेटेड नेट स्कोर:</div>
+                        <div id="previewNetScore" class="text-3xl sm:text-5xl font-black text-amber-400 mt-0.5">0.00</div>
+                    </div>
+                    <div class="text-right text-xs sm:text-sm text-rose-100 space-y-1">
+                        <div>अन-अटेम्प्ट: <span id="previewUnattempted" class="font-black text-white text-sm sm:text-base">0</span></div>
+                        <div>सटीकता: <span id="previewAccuracy" class="font-black text-amber-300 text-sm sm:text-base">0%</span></div>
+                    </div>
+                </div>
+
+                <!-- Remarks / Mistake Log -->
+                <div>
+                    <label class="text-xs sm:text-sm font-black text-slate-700 uppercase tracking-wider">Mistake Log नोट्स (सुधार बिंदु)</label>
+                    <textarea id="testRemarks" rows="2" placeholder="उदा. Q24 में 'नहीं' छूटा; विटामिन्स चार्ट और बिहार नदियां दोबारा देखना है..." class="w-full mt-1.5 px-3.5 py-2 text-xs sm:text-sm border-2 border-orange-200 rounded-xl focus:ring-2 focus:ring-orange-500 outline-none bg-orange-50/30 font-semibold"></textarea>
+                </div>
+
+                <button type="submit" id="submitTestBtn" class="w-full py-3.5 bg-gradient-to-r from-orange-600 via-rose-600 to-purple-800 hover:from-orange-500 hover:to-purple-700 text-white font-black rounded-xl shadow-lg shadow-orange-500/25 active:scale-[0.99] transition flex items-center justify-center gap-2 text-base sm:text-lg disabled:opacity-50 disabled:cursor-not-allowed">
+                    <i class="fa-solid fa-floppy-disk"></i> सुरक्षित करें (Save Test)
+                </button>
+            </form>
+
+        </div>
+    </div>
+
+    <!-- Application JavaScript Logic -->
+    <script>
+        const SCHEMA_VERSION = 2;
+        let tests = [];
+
+        // Forward-compatible schema migration loader
+        function loadStoredTests() {
+            try {
+                const raw = localStorage.getItem('bpsc_mock_tests');
+                if (!raw) return [];
+                const parsed = JSON.parse(raw);
+                // Backward-compatibility: if parsed is direct array or wrapped payload
+                if (Array.isArray(parsed)) {
+                    return parsed;
+                } else if (parsed && Array.isArray(parsed.data)) {
+                    return parsed.data;
+                }
+                return [];
+            } catch (err) {
+                console.error("Storage parse error:", err);
+                return [];
+            }
+        }
+
+        function persistTests(data) {
+            tests = data;
+            const payload = {
+                schemaVersion: SCHEMA_VERSION,
+                updatedAt: new Date().toISOString(),
+                appName: "MockTestTracker_BPSC_UPSC_UPPSC_NET",
+                data: tests
+            };
+            localStorage.setItem('bpsc_mock_tests', JSON.stringify(payload));
+        }
+
+        tests = loadStoredTests();
+        let currentTab = 'ALL';
+        let chartInstance = null;
+
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastText = document.getElementById('toastText');
+            if (!toast || !toastText) return;
+            toastText.innerText = message;
+            toast.classList.remove('opacity-0', '-translate-y-2');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', '-translate-y-2');
+            }, 2200);
+        }
+
+        // Robust Fullscreen API Handler with Multi-Vendor Prefixes and Fallback
+        function isFullscreenActive() {
+            return !!(document.fullscreenElement || document.webkitFullscreenElement || document.mozFullScreenElement || document.msFullscreenElement);
+        }
+
+        function updateFullscreenIcons(active) {
+            const hIcon = document.getElementById('fullscreenIcon');
+            const bIcon = document.getElementById('bottomFsIcon');
+            if (active) {
+                if (hIcon) hIcon.className = "fa-solid fa-compress text-orange-600";
+                if (bIcon) bIcon.className = "fa-solid fa-compress text-xl sm:text-2xl text-orange-600";
+            } else {
+                if (hIcon) hIcon.className = "fa-solid fa-expand text-orange-600";
+                if (bIcon) bIcon.className = "fa-solid fa-expand text-xl sm:text-2xl text-orange-600";
+            }
+        }
+
+        async function handleFullscreenClick(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            const docEl = document.documentElement;
+
+            if (!isFullscreenActive()) {
+                // Enter Fullscreen with vendor fallbacks
+                try {
+                    if (docEl.requestFullscreen) {
+                        await docEl.requestFullscreen();
+                    } else if (docEl.webkitRequestFullscreen) {
+                        await docEl.webkitRequestFullscreen();
+                    } else if (docEl.mozRequestFullScreen) {
+                        await docEl.mozRequestFullScreen();
+                    } else if (docEl.msRequestFullscreen) {
+                        await docEl.msRequestFullscreen();
+                    } else {
+                        // Fallback when browser blocks API (e.g. iframe or iOS Safari)
+                        window.scrollTo(0, 1);
+                        showToast("टिप: क्रोम मेनू (⋮) से 'Add to Home screen' करें");
+                        return;
+                    }
+                    showToast("फुलस्क्रीन चालू ✔");
+                    updateFullscreenIcons(true);
+                } catch (err) {
+                    console.warn("Fullscreen request error:", err);
+                    window.scrollTo(0, 1);
+                    showToast("ब्राउज़र ने फुलस्क्रीन सीमित की है (Add to Home screen करें)");
+                }
+            } else {
+                // Exit Fullscreen
+                try {
+                    if (document.exitFullscreen) {
+                        await document.exitFullscreen();
+                    } else if (document.webkitExitFullscreen) {
+                        await document.webkitExitFullscreen();
+                    } else if (document.mozCancelFullScreen) {
+                        await document.mozCancelFullScreen();
+                    } else if (document.msExitFullscreen) {
+                        await document.msExitFullscreen();
+                    }
+                    showToast("सामान्य स्क्रीन मोड");
+                    updateFullscreenIcons(false);
+                } catch (err) {
+                    console.warn("Fullscreen exit error:", err);
+                }
+            }
+        }
+
+        // Listen for system/keyboard fullscreen state changes
+        ['fullscreenchange', 'webkitfullscreenchange', 'mozfullscreenchange', 'MSFullscreenChange'].forEach(evt => {
+            document.addEventListener(evt, () => {
+                updateFullscreenIcons(isFullscreenActive());
+            });
+        });
+
+        // Tab Switching with Dark High-Contrast Active State
+        function switchTab(tabKey) {
+            currentTab = tabKey;
+            const tabs = ['ALL', 'BPSC', 'UPSC', 'UPPSC', 'UGCNET'];
+            tabs.forEach(k => {
+                const btn = document.getElementById(`tab-${k}`);
+                if (!btn) return;
+                if (k === tabKey) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            // Update headings & badges
+            const chartHeading = document.getElementById('chartHeading');
+            const chartSubBadge = document.getElementById('chartSubBadge');
+            const logsHeading = document.getElementById('logsHeading');
+            const labelTotal = document.getElementById('labelTotalTests');
+
+            if (tabKey === 'ALL') {
+                chartHeading.innerText = 'स्कोर ट्रेंड (Progression Graph)';
+                chartSubBadge.innerText = 'सभी परीक्षाएं';
+                chartSubBadge.className = 'text-xs sm:text-sm bg-orange-100 text-orange-900 px-3 py-1 rounded-full font-black border border-orange-300';
+                logsHeading.innerText = 'सभी टेस्ट इतिहास व Mistake Log';
+                labelTotal.innerText = 'कुल टेस्ट';
+            } else {
+                const conf = categoryConfig[tabKey];
+                chartHeading.innerText = `${conf.name} स्कोर ट्रेंड`;
+                chartSubBadge.innerText = conf.name;
+                chartSubBadge.className = `text-xs sm:text-sm bg-slate-900 text-amber-300 px-3 py-1 rounded-full font-black border border-orange-400`;
+                logsHeading.innerText = `${conf.name} टेस्ट इतिहास व Mistake Log`;
+                labelTotal.innerText = `${conf.name} टेस्ट`;
+            }
+
+            renderAll();
+        }
+
+        const categoryConfig = {
+            'BPSC': { name: 'BPSC', color: 'emerald', defaultTotal: 150, defaultPenalty: '0.333333', placeholder: 'उदा. BPSC FLT-01' },
+            'UPSC': { name: 'UPSC CSE', color: 'blue', defaultTotal: 100, defaultPenalty: '0.333333', placeholder: 'उदा. UPSC Prelims GS-1 Mock' },
+            'UPPSC': { name: 'UPPSC', color: 'amber', defaultTotal: 150, defaultPenalty: '0.333333', placeholder: 'उदा. UPPSC PCS Pre Mock' },
+            'UGCNET': { name: 'UGC NET', color: 'purple', defaultTotal: 150, defaultPenalty: '0', placeholder: 'उदा. NET-JRF Paper 1 & 2' }
+        };
+
+        function setFormCategory(cat) {
+            const conf = categoryConfig[cat] || categoryConfig['BPSC'];
+            document.getElementById('formExamCategory').value = cat;
+
+            ['BPSC', 'UPSC', 'UPPSC', 'UGCNET'].forEach(k => {
+                const btn = document.getElementById(`btnForm${k}`);
+                if (!btn) return;
+                if (k === cat) {
+                    btn.className = "py-2.5 text-xs sm:text-sm font-black rounded-xl transition text-white bg-slate-900 border-2 border-orange-500 shadow-md flex items-center justify-center gap-1.5 scale-102";
+                } else {
+                    btn.className = "py-2.5 text-xs sm:text-sm font-black rounded-xl border border-slate-200 transition text-slate-700 bg-slate-50 hover:bg-orange-50 flex items-center justify-center gap-1.5";
+                }
+            });
+
+            document.getElementById('totalQuestions').value = conf.defaultTotal;
+            document.getElementById('penaltyRate').value = conf.defaultPenalty;
+            document.getElementById('testName').placeholder = conf.placeholder;
+            document.getElementById('maxAttemptHint').innerText = `अधिकतम: ${conf.defaultTotal}`;
+
+            // Reset inputs cleanly
+            document.getElementById('attempted').value = '';
+            document.getElementById('correctAnswers').value = '';
+            document.getElementById('wrongAnswers').value = '';
+            document.getElementById('catAMistakes').value = '';
+            hideValidationAlert();
+            calculateRealtimeScore();
+        }
+
+        // --- Foolproof Real-Time Auto-Sync Calculation Engine ---
+        let lastEditedField = 'wrong'; // Default student workflow: counting wrong answers from answer key
+
+        function onTotalQuestionsInput() {
+            const total = parseInt(document.getElementById('totalQuestions').value) || 150;
+            const attemptedInput = document.getElementById('attempted');
+            document.getElementById('maxAttemptHint').innerText = `अधिकतम: ${total}`;
+
+            let attempted = parseInt(attemptedInput.value) || 0;
+            if (attempted > total) {
+                attemptedInput.value = total;
+                attempted = total;
+                showValidationAlert(`कुल अटेम्प्ट (${attempted}) कुल प्रश्नों (${total}) से अधिक नहीं हो सकता।`);
+            } else {
+                hideValidationAlert();
+            }
+            syncFields();
+        }
+
+        function onAttemptedInput() {
+            const total = parseInt(document.getElementById('totalQuestions').value) || 150;
+            const attemptedInput = document.getElementById('attempted');
+            let attempted = parseInt(attemptedInput.value);
+
+            if (isNaN(attempted) || attempted < 0) {
+                attempted = 0;
+            }
+
+            if (attempted > total) {
+                attempted = total;
+                attemptedInput.value = total;
+                showValidationAlert(`कुल अटेम्प्ट (${attempted}) कुल प्रश्नों (${total}) से अधिक नहीं हो सकता।`);
+            } else {
+                hideValidationAlert();
+            }
+
+            syncFields();
+        }
+
+        function onWrongInput() {
+            lastEditedField = 'wrong';
+            document.getElementById('wrongFieldTag').innerText = 'दर्ज';
+            document.getElementById('correctFieldTag').innerText = 'ऑटो';
+
+            const attempted = parseInt(document.getElementById('attempted').value) || 0;
+            const wrongInput = document.getElementById('wrongAnswers');
+            let wrong = parseInt(wrongInput.value);
+
+            if (isNaN(wrong) || wrong < 0) {
+                wrong = 0;
+            }
+
+            // Clamp wrong strictly to attempted
+            if (wrong > attempted) {
+                wrong = attempted;
+                wrongInput.value = wrong;
+                showValidationAlert(`गलत उत्तर (${wrong}) कुल अटेम्प्ट (${attempted}) से अधिक नहीं हो सकते!`);
+            } else {
+                hideValidationAlert();
+            }
+
+            // Auto-calculate Correct
+            const correct = Math.max(0, attempted - wrong);
+            document.getElementById('correctAnswers').value = correct;
+
+            clampCatAMistakes(wrong);
+            calculateRealtimeScore();
+        }
+
+        function onCorrectInput() {
+            lastEditedField = 'correct';
+            document.getElementById('correctFieldTag').innerText = 'दर्ज';
+            document.getElementById('wrongFieldTag').innerText = 'ऑटो';
+
+            const attempted = parseInt(document.getElementById('attempted').value) || 0;
+            const correctInput = document.getElementById('correctAnswers');
+            let correct = parseInt(correctInput.value);
+
+            if (isNaN(correct) || correct < 0) {
+                correct = 0;
+            }
+
+            // Clamp correct strictly to attempted
+            if (correct > attempted) {
+                correct = attempted;
+                correctInput.value = correct;
+                showValidationAlert(`सही उत्तर (${correct}) कुल अटेम्प्ट (${attempted}) से अधिक नहीं हो सकते!`);
+            } else {
+                hideValidationAlert();
+            }
+
+            // Auto-calculate Wrong
+            const wrong = Math.max(0, attempted - correct);
+            document.getElementById('wrongAnswers').value = wrong;
+
+            clampCatAMistakes(wrong);
+            calculateRealtimeScore();
+        }
+
+        function onCatAInput() {
+            const wrong = parseInt(document.getElementById('wrongAnswers').value) || 0;
+            clampCatAMistakes(wrong);
+        }
+
+        function clampCatAMistakes(wrong) {
+            const catAInput = document.getElementById('catAMistakes');
+            let catA = parseInt(catAInput.value);
+            if (isNaN(catA) || catA < 0) {
+                catA = 0;
+            }
+            if (catA > wrong) {
+                catA = wrong;
+                catAInput.value = wrong;
+                showValidationAlert(`सिली मिस्टेक्स (${catA}) कुल गलत उत्तरों (${wrong}) से अधिक नहीं हो सकतीं!`);
+            } else if (wrong === 0 && catA > 0) {
+                catAInput.value = 0;
+            }
+            document.getElementById('catAMaxHint').innerText = `अधिकतम: ${wrong}`;
+        }
+
+        // --- Backup & Restore Modal Handlers & Actions ---
+        function openBackupModal(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const modal = document.getElementById('backupModal');
+            if (!modal) return;
+            modal.classList.remove('hidden');
+            
+            // Update record count and text preview
+            const recordCountEl = document.getElementById('backupRecordCount');
+            if (recordCountEl) {
+                recordCountEl.innerText = `${tests.length} रिकॉर्ड्स`;
+            }
+            const rawTextEl = document.getElementById('rawBackupText');
+            if (rawTextEl) {
+                const payload = {
+                    schemaVersion: SCHEMA_VERSION,
+                    exportedAt: new Date().toISOString(),
+                    appName: "MockTestTracker_BPSC_UPSC_UPPSC_NET",
+                    totalRecords: tests.length,
+                    data: tests
+                };
+                rawTextEl.value = JSON.stringify(payload, null, 2);
+            }
+            hideBackupFeedback();
+        }
+
+        function closeBackupModal(e) {
+            if (e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+            const modal = document.getElementById('backupModal');
+            if (modal) modal.classList.add('hidden');
+        }
+
+        function toggleBackupTextarea() {
+            const box = document.getElementById('backupTextContainer');
+            if (box) {
+                box.classList.toggle('hidden');
+            }
+        }
+
+        function switchRestoreMode(mode) {
+            const fileSec = document.getElementById('restoreFileSection');
+            const pasteSec = document.getElementById('restorePasteSection');
+            const tabFile = document.getElementById('restoreTabFile');
+            const tabPaste = document.getElementById('restoreTabPaste');
+
+            if (mode === 'file') {
+                fileSec.classList.remove('hidden');
+                pasteSec.classList.add('hidden');
+                tabFile.className = "flex-1 py-1 text-xs font-black rounded-lg bg-blue-100 text-blue-900 transition cursor-pointer";
+                tabPaste.className = "flex-1 py-1 text-xs font-black rounded-lg text-slate-600 transition cursor-pointer";
+            } else {
+                fileSec.classList.add('hidden');
+                pasteSec.classList.remove('hidden');
+                tabPaste.className = "flex-1 py-1 text-xs font-black rounded-lg bg-blue-100 text-blue-900 transition cursor-pointer";
+                tabFile.className = "flex-1 py-1 text-xs font-black rounded-lg text-slate-600 transition cursor-pointer";
+            }
+        }
+
+        function showBackupFeedback(msg, isSuccess) {
+            const el = document.getElementById('backupFeedbackMsg');
+            if (!el) return;
+            el.innerText = msg;
+            el.className = isSuccess 
+                ? "p-3 rounded-xl text-xs sm:text-sm font-bold bg-emerald-100 text-emerald-900 border border-emerald-300 block"
+                : "p-3 rounded-xl text-xs sm:text-sm font-bold bg-rose-100 text-rose-900 border border-rose-300 block";
+        }
+
+        function hideBackupFeedback() {
+            const el = document.getElementById('backupFeedbackMsg');
+            if (el) el.classList.add('hidden');
+        }
+
+        function getBackupPayloadString() {
+            const payload = {
+                schemaVersion: SCHEMA_VERSION,
+                exportedAt: new Date().toISOString(),
+                appName: "MockTestTracker_BPSC_UPSC_UPPSC_NET",
+                totalRecords: tests.length,
+                data: tests
+            };
+            return JSON.stringify(payload, null, 2);
+        }
+
+        function exportData() {
+            if (tests.length === 0) {
+                showBackupFeedback("चेतावनी: अभी कोई टेस्ट रिकॉर्ड नहीं है जिसे एक्सपोर्ट किया जा सके!", false);
+                showToast("कोई टेस्ट रिकॉर्ड नहीं है!");
+                return;
+            }
+            const jsonStr = getBackupPayloadString();
+            const fileName = `mock_tracker_backup_${new Date().toISOString().slice(0,10)}.json`;
+            
+            try {
+                // Tier 1: Blob download
+                const blob = new Blob([jsonStr], { type: "application/json" });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = fileName;
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(url);
+                }, 100);
+                showBackupFeedback("बैकअप फ़ाइल डाउनलोड शुरू हो गई! ✔", true);
+                showToast("बैकअप फ़ाइल डाउनलोड शुरू ✔");
+            } catch (err) {
+                // Tier 2 Fallback: Data URI
+                try {
+                    const dataUri = "data:application/json;charset=utf-8," + encodeURIComponent(jsonStr);
+                    const a = document.createElement('a');
+                    a.href = dataUri;
+                    a.download = fileName;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    showBackupFeedback("बैकअप फ़ाइल डाउनलोड शुरू हो गई! ✔", true);
+                    showToast("बैकअप फ़ाइल डाउनलोड शुरू ✔");
+                } catch (fallbackErr) {
+                    showBackupFeedback("डाउनलोड रुका। नीचे 'टेक्स्ट कॉपी करें' या 'शेयर' बटन का उपयोग करें।", false);
+                }
+            }
+        }
+
+        async function shareBackupNative() {
+            const jsonStr = getBackupPayloadString();
+            if (navigator.share) {
+                try {
+                    const file = new File([jsonStr], "mock_tracker_backup.json", { type: "application/json" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        await navigator.share({
+                            files: [file],
+                            title: "टेस्ट प्रदर्शन ट्रैकर बैकअप",
+                            text: "मेरे BPSC/UPSC मॉक टेस्ट का बैकअप डेटा"
+                        });
+                        showToast("शेयर सफल ✔");
+                        return;
+                    }
+                    await navigator.share({
+                        title: "टेस्ट प्रदर्शन ट्रैकर बैकअप",
+                        text: jsonStr
+                    });
+                    showToast("शेयर सफल ✔");
+                } catch (err) {
+                    if (err.name !== 'AbortError') {
+                        copyDataToClipboard();
+                    }
+                }
+            } else {
+                copyDataToClipboard();
+            }
+        }
+
+        function copyDataToClipboard() {
+            const jsonStr = getBackupPayloadString();
+            try {
+                const tempInput = document.createElement("textarea");
+                tempInput.value = jsonStr;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand("copy");
+                document.body.removeChild(tempInput);
+                showBackupFeedback("बैकअप टेक्स्ट क्लिपबोर्ड में कॉपी हो गया! कहीं भी पेस्ट कर सकते हैं। ✔", true);
+                showToast("डेटा क्लिपबोर्ड में कॉपी हुआ ✔");
+            } catch (err) {
+                showBackupFeedback("कॉपी असफल। 'बैकअप कोड देखें' से मैनुअल कॉपी करें।", false);
+            }
+        }
+
+        function processImport(isOverwrite) {
+            const fileInput = document.getElementById('importFileInput');
+            const pasteInput = document.getElementById('importPasteInput');
+            const pasteVal = pasteInput ? pasteInput.value.trim() : "";
+
+            if (pasteVal.length > 0) {
+                parseAndApplyImport(pasteVal, isOverwrite);
+            } else if (fileInput && fileInput.files && fileInput.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function(evt) {
+                    parseAndApplyImport(evt.target.result, isOverwrite);
+                };
+                reader.onerror = function() {
+                    showBackupFeedback("फ़ाइल पढ़ने में त्रुटि!", false);
+                };
+                reader.readAsText(fileInput.files[0]);
+            } else {
+                showBackupFeedback("कृपया पहले JSON फ़ाइल चुनें या बैकअप टेक्स्ट पेस्ट करें!", false);
+            }
+        }
+
+        function parseAndApplyImport(rawText, isOverwrite) {
+            try {
+                const parsed = JSON.parse(rawText);
+                let incomingList = [];
+                if (Array.isArray(parsed)) {
+                    incomingList = parsed;
+                } else if (parsed && Array.isArray(parsed.data)) {
+                    incomingList = parsed.data;
+                } else {
+                    showBackupFeedback("अमान्य बैकअप फ़ाइल प्रारूप!", false);
+                    return;
+                }
+
+                if (incomingList.length === 0) {
+                    showBackupFeedback("बैकअप फ़ाइल में कोई टेस्ट रिकॉर्ड नहीं मिला!", false);
+                    return;
+                }
+
+                if (isOverwrite) {
+                    persistTests(incomingList);
+                    showBackupFeedback(`सफलता: ${incomingList.length} टेस्ट रिकॉर्ड्स रिप्लेस हो गए! ✔`, true);
+                    showToast(`${incomingList.length} रिकॉर्ड्स रिस्टोर हुए ✔`);
+                } else {
+                    // Merge based on unique IDs
+                    const existingMap = new Map(tests.map(item => [item.id, item]));
+                    let addedCount = 0;
+                    incomingList.forEach(item => {
+                        if (!existingMap.has(item.id)) {
+                            existingMap.set(item.id, item);
+                            addedCount++;
+                        }
+                    });
+                    const merged = Array.from(existingMap.values()).sort((a,b) => b.id - a.id);
+                    persistTests(merged);
+                    showBackupFeedback(`सफलता: ${addedCount} नए रिकॉर्ड्स जोड़े गए (कुल: ${merged.length})! ✔`, true);
+                    showToast(`${addedCount} नए रिकॉर्ड्स जुड़े ✔`);
+                }
+
+                renderAll();
+                setTimeout(() => {
+                    closeBackupModal();
+                }, 1600);
+            } catch (err) {
+                console.error("Import error:", err);
+                showBackupFeedback("डेटा पार्स करने में त्रुटि! अमान्य JSON कोड।", false);
+            }
+        }
+
+        function syncFields() {
+            const attempted = parseInt(document.getElementById('attempted').value) || 0;
+            const wrongInput = document.getElementById('wrongAnswers');
+            const correctInput = document.getElementById('correctAnswers');
+
+            let wrong = parseInt(wrongInput.value);
+            let correct = parseInt(correctInput.value);
+
+            if (lastEditedField === 'wrong') {
+                if (isNaN(wrong)) wrong = 0;
+                if (wrong > attempted) wrong = attempted;
+                wrongInput.value = wrong;
+                correctInput.value = Math.max(0, attempted - wrong);
+            } else {
+                if (isNaN(correct)) correct = 0;
+                if (correct > attempted) correct = attempted;
+                correctInput.value = correct;
+                wrongInput.value = Math.max(0, attempted - correct);
+            }
+
+            clampCatAMistakes(parseInt(wrongInput.value) || 0);
+            calculateRealtimeScore();
+        }
+
+        function showValidationAlert(msg) {
+            const alertBox = document.getElementById('mathValidationAlert');
+            const alertMsg = document.getElementById('mathValidationMessage');
+            if (alertBox && alertMsg) {
+                alertMsg.innerText = msg;
+                alertBox.classList.remove('hidden');
+            }
+        }
+
+        function hideValidationAlert() {
+            const alertBox = document.getElementById('mathValidationAlert');
+            if (alertBox) {
+                alertBox.classList.add('hidden');
+            }
+        }
+
+        function calculateRealtimeScore() {
+            const total = parseInt(document.getElementById('totalQuestions').value) || 150;
+            const attempted = parseInt(document.getElementById('attempted').value) || 0;
+            const correct = parseInt(document.getElementById('correctAnswers').value) || 0;
+            const wrong = parseInt(document.getElementById('wrongAnswers').value) || 0;
+            const penalty = parseFloat(document.getElementById('penaltyRate').value) || 0;
+            const submitBtn = document.getElementById('submitTestBtn');
+
+            // Mathematical verification check: Correct + Wrong MUST equal Attempted
+            const sumAnswers = correct + wrong;
+            const isInvalidMath = (attempted > 0 && sumAnswers !== attempted) || (attempted > total);
+
+            if (isInvalidMath) {
+                showValidationAlert(`अमान्य गणना: सही (${correct}) + गलत (${wrong}) = ${sumAnswers}, जो कुल अटेम्प्ट (${attempted}) से मेल नहीं खाता!`);
+                if (submitBtn) submitBtn.disabled = true;
+                document.getElementById('previewNetScore').innerText = "0.00";
+                document.getElementById('previewUnattempted').innerText = Math.max(0, total - attempted);
+                document.getElementById('previewAccuracy').innerText = "0%";
+                return;
+            }
+
+            hideValidationAlert();
+            if (submitBtn) submitBtn.disabled = false;
+
+            // Accurate Net Score Formula
+            // Penalty: 1/3 (0.333333...) for BPSC/UPSC/UPPSC, 0 for UGC NET
+            let netScore = 0;
+            if (penalty > 0) {
+                netScore = correct - (wrong * penalty);
+            } else {
+                netScore = correct;
+            }
+
+            const unattempted = Math.max(0, total - attempted);
+            const accuracy = attempted > 0 ? ((correct / attempted) * 100).toFixed(1) : "0";
+
+            document.getElementById('previewNetScore').innerText = Number(netScore).toFixed(2);
+            document.getElementById('previewUnattempted').innerText = unattempted;
+            document.getElementById('previewAccuracy').innerText = accuracy + '%';
+        }
+
+        function openModal() {
+            document.getElementById('testModal').classList.remove('hidden');
+            document.getElementById('testForm').reset();
+            document.getElementById('testDate').valueAsDate = new Date();
+            const targetCat = currentTab === 'ALL' ? 'BPSC' : currentTab;
+            setFormCategory(targetCat);
+        }
+
+        function closeModal() {
+            document.getElementById('testModal').classList.add('hidden');
+        }
+
+        function saveTest(e) {
+            e.preventDefault();
+            const category = document.getElementById('formExamCategory').value || 'BPSC';
+            const total = parseInt(document.getElementById('totalQuestions').value) || 150;
+            const attempted = parseInt(document.getElementById('attempted').value) || 0;
+            const correct = parseInt(document.getElementById('correctAnswers').value) || 0;
+            const wrong = parseInt(document.getElementById('wrongAnswers').value) || 0;
+            const penalty = parseFloat(document.getElementById('penaltyRate').value) || 0;
+            const netScore = (correct - (wrong * penalty)).toFixed(2);
+
+            const testData = {
+                id: Date.now(),
+                category: category,
+                name: document.getElementById('testName').value.trim() || `${category} टेस्ट`,
+                date: document.getElementById('testDate').value,
+                total: total,
+                attempted: attempted,
+                correct: correct,
+                wrong: wrong,
+                catA: parseInt(document.getElementById('catAMistakes').value) || 0,
+                netScore: parseFloat(netScore),
+                remarks: document.getElementById('testRemarks').value.trim()
+            };
+
+            tests.unshift(testData);
+            persistTests(tests);
+            closeModal();
+            renderAll();
+        }
+
+        function deleteTest(id) {
+            tests = tests.filter(t => t.id !== id);
+            persistTests(tests);
+            renderAll();
+        }
+
+        function getFilterededTests() {
+            if (currentTab === 'ALL') return tests;
+            return tests.filter(t => (t.category || 'BPSC') === currentTab);
+        }
+
+        function renderStats() {
+            const filtered = getFilterededTests();
+            document.getElementById('statTotalTests').innerText = filtered.length;
+            if (filtered.length === 0) {
+                document.getElementById('statAvgScore').innerText = '0.0';
+                document.getElementById('statBestScore').innerText = '0.0';
+                return;
+            }
+            const totalScore = filtered.reduce((acc, t) => acc + t.netScore, 0);
+            const avg = (totalScore / filtered.length).toFixed(1);
+            const best = Math.max(...filtered.map(t => t.netScore)).toFixed(1);
+
+            document.getElementById('statAvgScore').innerText = avg;
+            document.getElementById('statBestScore').innerText = best;
+        }
+
+        function renderChart() {
+            const ctx = document.getElementById('scoreChart').getContext('2d');
+            const filtered = [...getFilterededTests()].reverse();
+            const labels = filtered.map((t, idx) => t.name || `T-${idx+1}`);
+            const dataScores = filtered.map(t => t.netScore);
+
+            let chartColor = '#f97316';
+            let chartBg = 'rgba(249, 115, 22, 0.15)';
+            if (currentTab === 'BPSC') { chartColor = '#10b981'; chartBg = 'rgba(16, 185, 129, 0.15)'; }
+            else if (currentTab === 'UPSC') { chartColor = '#f43f5e'; chartBg = 'rgba(244, 63, 94, 0.15)'; }
+            else if (currentTab === 'UPPSC') { chartColor = '#ea580c'; chartBg = 'rgba(234, 88, 12, 0.15)'; }
+            else if (currentTab === 'UGCNET') { chartColor = '#a855f7'; chartBg = 'rgba(168, 85, 247, 0.15)'; }
+
+            if (chartInstance) {
+                chartInstance.destroy();
+            }
+
+            chartInstance = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels.length ? labels : ['शुरुआत'],
+                    datasets: [{
+                        label: 'नेट स्कोर',
+                        data: dataScores.length ? dataScores : [0],
+                        borderColor: chartColor,
+                        backgroundColor: chartBg,
+                        fill: true,
+                        tension: 0.35,
+                        pointBackgroundColor: chartColor,
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: '#fed7aa40' },
+                            ticks: { font: { size: 9 } }
+                        },
+                        x: {
+                            grid: { display: false },
+                            ticks: { font: { size: 9 } }
+                        }
+                    }
+                }
+            });
+        }
+
+        function getCategoryBadge(cat) {
+            switch(cat) {
+                case 'BPSC':
+                    return '<span class="text-xs sm:text-sm bg-emerald-100 text-emerald-950 font-black px-2.5 py-0.5 rounded-full border border-emerald-400">BPSC</span>';
+                case 'UPSC':
+                    return '<span class="text-xs sm:text-sm bg-blue-100 text-blue-950 font-black px-2.5 py-0.5 rounded-full border border-blue-400">UPSC CSE</span>';
+                case 'UPPSC':
+                    return '<span class="text-xs sm:text-sm bg-orange-100 text-orange-950 font-black px-2.5 py-0.5 rounded-full border border-orange-400">UPPSC</span>';
+                case 'UGCNET':
+                    return '<span class="text-xs sm:text-sm bg-purple-100 text-purple-950 font-black px-2.5 py-0.5 rounded-full border border-purple-400">UGC NET</span>';
+                default:
+                    return '<span class="text-xs sm:text-sm bg-slate-100 text-slate-950 font-black px-2.5 py-0.5 rounded-full border border-slate-400">BPSC</span>';
+            }
+        }
+
+        function renderLogs() {
+            const container = document.getElementById('testLogsContainer');
+            const filtered = getFilterededTests();
+
+            if (filtered.length === 0) {
+                container.innerHTML = `
+                    <div class="bg-white p-8 rounded-2xl border-2 border-dashed border-slate-300 text-center text-slate-400 space-y-3">
+                        <i class="fa-solid fa-clipboard-list text-4xl text-slate-300"></i>
+                        <p class="text-sm sm:text-base font-bold text-slate-600">इस श्रेणी में कोई टेस्ट रिकॉर्ड नहीं है।<br>ऊपर <b>"नया टेस्ट"</b> पर क्लिक करके पहला टेस्ट दर्ज करें।</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = filtered.map(t => {
+                const cat = t.category || 'BPSC';
+                return `
+                    <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-slate-200 space-y-3">
+                        <div class="flex items-center justify-between">
+                            <div class="space-y-1">
+                                <div class="flex items-center gap-2">
+                                    ${getCategoryBadge(cat)}
+                                    <h3 class="font-black text-slate-950 text-lg sm:text-2xl">${t.name}</h3>
+                                </div>
+                                <span class="text-xs sm:text-sm text-slate-500 font-bold block"><i class="fa-regular fa-calendar mr-1"></i> ${t.date}</span>
+                            </div>
+                            <div class="text-right">
+                                <span class="text-3xl sm:text-5xl font-black text-orange-600">${t.netScore}</span>
+                                <span class="text-xs sm:text-sm text-slate-500 block font-black">नेट अंक</span>
+                            </div>
+                        </div>
+
+                        <div class="grid grid-cols-4 gap-2 text-center bg-orange-50/50 p-3 rounded-xl border border-orange-200/60">
+                            <div>
+                                <span class="text-slate-500 block text-xs sm:text-sm font-bold">अटेम्प्ट</span>
+                                <span class="font-black text-slate-900 text-base sm:text-xl">${t.attempted}/${t.total}</span>
+                            </div>
+                            <div>
+                                <span class="text-emerald-600 block text-xs sm:text-sm font-bold">सही ✔</span>
+                                <span class="font-black text-emerald-800 text-base sm:text-xl">${t.correct}</span>
+                            </div>
+                            <div>
+                                <span class="text-rose-600 block text-xs sm:text-sm font-bold">गलत ✖</span>
+                                <span class="font-black text-rose-800 text-base sm:text-xl">${t.wrong}</span>
+                            </div>
+                            <div>
+                                <span class="text-amber-700 block text-xs sm:text-sm font-bold">सिली (Cat A)</span>
+                                <span class="font-black text-amber-950 text-base sm:text-xl">${t.catA || 0}</span>
+                            </div>
+                        </div>
+
+                        ${t.remarks ? `
+                            <div class="text-xs sm:text-sm bg-amber-50/80 text-amber-950 p-3 rounded-xl border border-amber-300 font-semibold leading-relaxed">
+                                <i class="fa-solid fa-lightbulb text-amber-600 mr-1.5 text-sm"></i> <strong>Mistake Takeaways:</strong> ${t.remarks}
+                            </div>
+                        ` : ''}
+
+                        <div class="flex justify-end pt-1">
+                            <button onclick="deleteTest(${t.id})" class="text-xs sm:text-sm text-slate-400 hover:text-rose-600 font-bold transition py-1 px-3 rounded-lg hover:bg-rose-50 flex items-center gap-1">
+                                <i class="fa-regular fa-trash-can"></i> हटाएं
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function renderAll() {
+            renderStats();
+            renderChart();
+            renderLogs();
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            renderAll();
+        });
+    </script>
+</body>
+</html>
